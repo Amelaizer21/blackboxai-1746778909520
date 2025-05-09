@@ -1,0 +1,118 @@
+<Application x:Class="RosewoodSecurity.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:RosewoodSecurity.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Material Design Theme -->
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Blue" SecondaryColor="DeepPurple" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                
+                <!-- Converters -->
+                <ResourceDictionary>
+                    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+                    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+                    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+                    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+                    <converters:NotNullToBoolConverter x:Key="NotNullToBoolConverter"/>
+                    <converters:BoolToCheckInOutTitleConverter x:Key="BoolToCheckInOutTitleConverter"/>
+                    <converters:BoolToCheckInOutButtonConverter x:Key="BoolToCheckInOutButtonConverter"/>
+                    <converters:BoolToStatusBrushConverter x:Key="BoolToStatusBrushConverter"/>
+                    <converters:CountToBackgroundConverter x:Key="CountToBackgroundConverter"/>
+                    <converters:PercentageToColorConverter x:Key="PercentageToColorConverter"/>
+                </ResourceDictionary>
+                
+                <!-- Custom Colors -->
+                <ResourceDictionary>
+                    <Color x:Key="PrimaryColor">#1976D2</Color>
+                    <Color x:Key="SecondaryColor">#424242</Color>
+                    <Color x:Key="BackgroundColor">#FFFFFF</Color>
+                    <Color x:Key="TextColor">#000000</Color>
+                    <Color x:Key="AccentColor">#FF4081</Color>
+                    
+                    <!-- Brushes -->
+                    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+                    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+                    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+                    
+                    <!-- Dark Theme Colors -->
+                    <Color x:Key="DarkPrimaryColor">#1565C0</Color>
+                    <Color x:Key="DarkSecondaryColor">#212121</Color>
+                    <Color x:Key="DarkBackgroundColor">#121212</Color>
+                    <Color x:Key="DarkTextColor">#FFFFFF</Color>
+                    
+                    <!-- Dark Theme Brushes -->
+                    <SolidColorBrush x:Key="DarkPrimaryBrush" Color="{StaticResource DarkPrimaryColor}"/>
+                    <SolidColorBrush x:Key="DarkSecondaryBrush" Color="{StaticResource DarkSecondaryColor}"/>
+                    <SolidColorBrush x:Key="DarkBackgroundBrush" Color="{StaticResource DarkBackgroundColor}"/>
+                    <SolidColorBrush x:Key="DarkTextBrush" Color="{StaticResource DarkTextColor}"/>
+                </ResourceDictionary>
+                
+                <!-- Custom Styles -->
+                <ResourceDictionary>
+                    <!-- Button Style -->
+                    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="4"/>
+                        <Setter Property="Height" Value="36"/>
+                        <Setter Property="Padding" Value="16,0"/>
+                        <Setter Property="Margin" Value="8"/>
+                    </Style>
+                    
+                    <!-- TextBox Style -->
+                    <Style x:Key="DefaultTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+                        <Setter Property="Margin" Value="8"/>
+                        <Setter Property="materialDesign:HintAssist.IsFloating" Value="True"/>
+                    </Style>
+                    
+                    <!-- ComboBox Style -->
+                    <Style x:Key="DefaultComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+                        <Setter Property="Margin" Value="8"/>
+                        <Setter Property="materialDesign:HintAssist.IsFloating" Value="True"/>
+                    </Style>
+                    
+                    <!-- DataGrid Style -->
+                    <Style x:Key="DefaultDataGrid" TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
+                        <Setter Property="AutoGenerateColumns" Value="False"/>
+                        <Setter Property="CanUserAddRows" Value="False"/>
+                        <Setter Property="CanUserDeleteRows" Value="False"/>
+                        <Setter Property="IsReadOnly" Value="True"/>
+                        <Setter Property="SelectionMode" Value="Single"/>
+                        <Setter Property="SelectionUnit" Value="FullRow"/>
+                        <Setter Property="GridLinesVisibility" Value="All"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                        <Setter Property="Margin" Value="8"/>
+                    </Style>
+                    
+                    <!-- Card Style -->
+                    <Style x:Key="DefaultCard" TargetType="materialDesign:Card">
+                        <Setter Property="Padding" Value="16"/>
+                        <Setter Property="Margin" Value="8"/>
+                        <Setter Property="UniformCornerRadius" Value="4"/>
+                    </Style>
+                    
+                    <!-- Header Style -->
+                    <Style x:Key="PageHeader" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="24"/>
+                        <Setter Property="FontWeight" Value="Medium"/>
+                        <Setter Property="Margin" Value="16,16,16,8"/>
+                    </Style>
+                    
+                    <!-- Subheader Style -->
+                    <Style x:Key="Subheader" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="Margin" Value="16,8"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
