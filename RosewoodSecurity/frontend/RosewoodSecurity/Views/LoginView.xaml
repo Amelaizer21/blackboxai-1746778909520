@@ -1,0 +1,80 @@
+<UserControl x:Class="RosewoodSecurity.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left side - Background Image -->
+        <Image Grid.Column="0" 
+               Source="https://images.pexels.com/photos/3184432/pexels-photo-3184432.jpeg"
+               Stretch="UniformToFill"/>
+
+        <!-- Right side - Login Form -->
+        <materialDesign:Card Grid.Column="1" 
+                            Margin="0"
+                            Background="{DynamicResource MaterialDesignPaper}"
+                            materialDesign:ElevationAssist.Elevation="Dp4">
+            <StackPanel Margin="32">
+                <!-- Logo and Title -->
+                <TextBlock Text="Rosewood Security"
+                         Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                         HorizontalAlignment="Center"
+                         Margin="0,32,0,16"/>
+                
+                <TextBlock Text="Key &amp; Access Management"
+                         Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                         HorizontalAlignment="Center"
+                         Opacity="0.8"
+                         Margin="0,0,0,32"/>
+
+                <!-- Username -->
+                <TextBox Style="{StaticResource DefaultTextBox}"
+                         materialDesign:HintAssist.Hint="Username"
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!-- Password -->
+                <PasswordBox Style="{StaticResource MaterialDesignPasswordBox}"
+                            materialDesign:HintAssist.Hint="Password"
+                            materialDesign:TextFieldAssist.HasClearButton="True"
+                            Margin="8"
+                            x:Name="PasswordBox"/>
+
+                <!-- 2FA Code (Visibility bound to ShowTwoFactorInput) -->
+                <TextBox Style="{StaticResource DefaultTextBox}"
+                         materialDesign:HintAssist.Hint="2FA Code"
+                         Text="{Binding TwoFactorCode, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding ShowTwoFactorInput, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <!-- Error Message -->
+                <TextBlock Text="{Binding ErrorMessage}"
+                          Foreground="{DynamicResource MaterialDesignError}"
+                          TextWrapping="Wrap"
+                          Margin="8,8,8,16"
+                          Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+
+                <!-- Login Button -->
+                <Button Style="{StaticResource PrimaryButton}"
+                        Content="Login"
+                        Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding IsNotBusy}"
+                        Width="200"/>
+
+                <!-- Loading Indicator -->
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            Value="0"
+                            IsIndeterminate="True"
+                            Margin="0,16,0,0"
+                            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
