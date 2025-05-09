@@ -1,0 +1,185 @@
+<UserControl x:Class="RosewoodSecurity.Views.CheckInOutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200">
+    
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Check In/Out Management"
+                 Style="{StaticResource PageHeader}"/>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel - Check In/Out Form -->
+            <materialDesign:Card Style="{StaticResource DefaultCard}">
+                <DockPanel>
+                    <!-- Form Title -->
+                    <TextBlock Text="{Binding IsCheckOut, Converter={StaticResource BoolToCheckInOutTitleConverter}}"
+                             Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                             DockPanel.Dock="Top"
+                             Margin="0,0,0,16"/>
+
+                    <!-- Scanner Status Indicator -->
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,16">
+                        <materialDesign:PackIcon Kind="Barcode"
+                                               Height="24"
+                                               Width="24"
+                                               VerticalAlignment="Center"/>
+                        <TextBlock Text="Scanner Status:"
+                                 Margin="8,0"
+                                 VerticalAlignment="Center"/>
+                        <Ellipse Width="12"
+                                Height="12"
+                                Fill="{Binding IsScannerConnected, Converter={StaticResource BoolToStatusBrushConverter}}"
+                                HorizontalAlignment="Left"/>
+                    </DockPanel>
+
+                    <!-- Form Content -->
+                    <StackPanel>
+                        <!-- Employee ID Input (Scanner-enabled) -->
+                        <TextBox Style="{StaticResource DefaultTextBox}"
+                                materialDesign:HintAssist.Hint="Employee ID (Scan or Type)"
+                                Text="{Binding EmployeeId, UpdateSourceTrigger=PropertyChanged}"
+                                x:Name="EmployeeIdInput"
+                                materialDesign:TextFieldAssist.HasClearButton="True"/>
+
+                        <!-- Employee Info (shows after scan) -->
+                        <materialDesign:Card Style="{StaticResource DefaultCard}"
+                                           Visibility="{Binding EmployeeInfo, Converter={StaticResource NullToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Employee Photo -->
+                                <Image Source="{Binding EmployeeInfo.PhotoUrl}"
+                                       Width="64"
+                                       Height="64"
+                                       Margin="0,0,16,0"/>
+
+                                <!-- Employee Details -->
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding EmployeeInfo.FullName}"
+                                             Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                                    <TextBlock Text="{Binding EmployeeInfo.Department}"
+                                             Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                             Opacity="0.7"/>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
+
+                        <!-- Item Selection -->
+                        <ComboBox Style="{StaticResource DefaultComboBox}"
+                                  materialDesign:HintAssist.Hint="Select Item Type"
+                                  ItemsSource="{Binding ItemTypes}"
+                                  SelectedItem="{Binding SelectedItemType}"
+                                  Margin="0,16,0,0"/>
+
+                        <ComboBox Style="{StaticResource DefaultComboBox}"
+                                  materialDesign:HintAssist.Hint="Select Item"
+                                  ItemsSource="{Binding AvailableItems}"
+                                  SelectedItem="{Binding SelectedItem}"
+                                  IsEnabled="{Binding SelectedItemType, Converter={StaticResource NotNullToBoolConverter}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding Id}"/>
+                                        <Run Text=" - "/>
+                                        <Run Text="{Binding Location}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <!-- Purpose Input (for check-out) -->
+                        <TextBox Style="{StaticResource DefaultTextBox}"
+                                 materialDesign:HintAssist.Hint="Purpose"
+                                 Text="{Binding Purpose}"
+                                 Visibility="{Binding IsCheckOut, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <!-- Expected Return Time (for check-out) -->
+                        <DatePicker Style="{StaticResource MaterialDesignDatePicker}"
+                                   materialDesign:HintAssist.Hint="Expected Return Date"
+                                   SelectedDate="{Binding ExpectedReturnDate}"
+                                   Visibility="{Binding IsCheckOut, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Margin="8"/>
+
+                        <!-- Action Button -->
+                        <Button Style="{StaticResource PrimaryButton}"
+                                Content="{Binding IsCheckOut, Converter={StaticResource BoolToCheckInOutButtonConverter}}"
+                                Command="{Binding ProcessTransactionCommand}"
+                                Margin="0,16,0,0"/>
+
+                        <!-- Error Message -->
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                  Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                  Foreground="{DynamicResource MaterialDesignError}"
+                                  TextWrapping="Wrap"
+                                  Margin="0,8,0,0"
+                                  Visibility="{Binding ErrorMessage, Converter={StaticResource StringToVisibilityConverter}}"/>
+                    </StackPanel>
+                </DockPanel>
+            </materialDesign:Card>
+
+            <!-- Right Panel - Active Transactions -->
+            <materialDesign:Card Grid.Column="1" 
+                               Style="{StaticResource DefaultCard}"
+                               Margin="16,0,0,0">
+                <DockPanel>
+                    <TextBlock Text="Active Transactions"
+                             Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                             DockPanel.Dock="Top"
+                             Margin="0,0,0,16"/>
+
+                    <DataGrid ItemsSource="{Binding ActiveTransactions}"
+                              Style="{StaticResource DefaultDataGrid}"
+                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Employee"
+                                              Binding="{Binding EmployeeName}"
+                                              Width="200"/>
+                            <DataGridTextColumn Header="Item ID"
+                                              Binding="{Binding ItemId}"
+                                              Width="120"/>
+                            <DataGridTextColumn Header="Type"
+                                              Binding="{Binding ItemType}"
+                                              Width="100"/>
+                            <DataGridTextColumn Header="Checked Out"
+                                              Binding="{Binding CheckOutTime, StringFormat='{}{0:g}'}"
+                                              Width="150"/>
+                            <DataGridTextColumn Header="Expected Return"
+                                              Binding="{Binding ExpectedReturnTime, StringFormat='{}{0:g}'}"
+                                              Width="150"/>
+                            <DataGridTemplateColumn Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                Command="{Binding DataContext.CheckInCommand, 
+                                                          RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Check In"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</UserControl>
